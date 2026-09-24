@@ -1,0 +1,9 @@
+RewriteEngine On
+
+# Untuk mengarahkan permintaan ke login.php jika root diakses
+RewriteRule ^$ login.php [L]
+
+# Untuk mengarahkan permintaan ke file tanpa ekstensi .php
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^([^\.]+)$ $1.php [NC,L]

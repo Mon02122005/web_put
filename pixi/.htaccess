@@ -1,0 +1,30 @@
+# Aktifkan mod_rewrite (pastikan diaktifkan di server Apache)
+RewriteEngine On
+
+# Routing ke result.php berdasarkan slug
+RewriteRule ^result/([A-Za-z0-9_-]+)$ result.php?slug=$1 [L,QSA]
+
+# Pastikan path yang dituju adalah file atau folder valid
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_URI} !^/putriti/uploads/
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Hilangkan ekstensi .php dari URL
+RewriteRule ^([^/]+)$ $1.php [L,QSA]
+
+# Opsional: redirect semua ke HTTPS (jika sudah punya SSL)
+# RewriteCond %{HTTPS} !=on
+# RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Cegah akses langsung ke file sensitif
+<FilesMatch "\.(env|sql|log|conf|config|htaccess)$">
+    Require all denied
+</FilesMatch>
+
+# Tambahan keamanan dan caching dasar
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set X-XSS-Protection "1; mode=block"
+</IfModule>
+
